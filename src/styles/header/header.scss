@@ -1,0 +1,40 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    width: 100%;
+    height: 10vh;
+    position: fixed;
+    z-index: 999;
+}
+.headerText {
+    color: #2f3b55;
+    // font-size: 1.7vh;
+    font-weight: 600;
+    padding: 0 3vw;
+}
+.headerBtnBox {
+    padding: 0 2vw;
+    // background-color: antiquewhite;
+}
+.headerBtn {
+    border: none;
+    background: none;
+    // font-size: 1.4vh;
+    // background-color: red;
+    color: #2f3b55;
+    font-weight: 600;
+}
+.notiBox {
+    background-color: #2f3b55;
+    padding: 0.2vh 1vw;
+    border-radius: 5px;
+    position: absolute;
+    top: -10;
+    right: 20;
+}
+.notiBoxTxt {
+    color: #fff;
+    font-size: 1.4vh;
+}

@@ -1,0 +1,180 @@
+.deviceBox {
+  width: 88%;
+  margin: 15px auto;
+  padding: 10px 15px;
+  background-color: #f4f8ff;
+  border-radius: 10px;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.nameText {
+  color: #2f3b55;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.sensorContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.sensor {
+  text-align: center;
+  border: 1px solid #2f3b55;
+  background-color: #2f3b55;
+  color: #fff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 3px 1px;
+  width: 15.8vw;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.sensorVal {
+  text-align: center;
+  border: 1px solid #2f3b55;
+  background-image: #fff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 3px 1px;
+  width: 15.8vw;
+  font-weight: 600;
+}
+
+.inactiveSensor {
+  text-align: center;
+  border: 1px solid #a3afc9;
+  background-color: #a3afc9;
+  color: #fff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 3px 1px;
+  width: 15.8vw;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.inactiveSensorVal {
+  text-align: center;
+  border: 1px solid #a3afc9;
+  background-color: #edf2f9;
+  color: #a3afc9;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 3px 1px;
+  width: 15.8vw;
+  font-weight: 600;
+}
+
+.contentbtn {
+  background-color: #2f3b55;
+  border: none;
+  width: 100%;
+  padding: 3px 1px;
+  border-radius: 5px;
+  margin-top: 7px;
+  text-align: center;
+  color: #fff;
+  font-size: 15px;
+}
+
+.noData {
+  text-align: center;
+  color: #2f3b55;
+  margin-top: 5px;
+}
+
+.infoBox {
+  padding-top: 10px;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  margin: 5px 0;
+}
+
+.infoTitle {
+  background-color: #c1cce2;
+  width: 40%;
+  padding: 5px 0;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+}
+
+.infoContent {
+  width: 60%;
+  padding: 0 5px;
+  padding: 5px 0;
+  text-align: center;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border: 1px solid #eff2f7;
+  color: #000;
+  background-color: #fff;
+}
+
+.searchBox {
+  border-radius: 10px;
+  background-color: #f4f8ff;
+  margin: 10px 1vh 0 0;
+}
+
+.searchInput {
+  padding: 0 10px;
+  color: #2f3b55;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  width: 45vw;
+  outline: none;
+}
+.searchInput ::-moz-placeholder {
+  color: #a5afc7;
+}
+.searchInput ::placeholder {
+  color: #a5afc7;
+}
+
+.searchBtn {
+  padding: 8px;
+  border: none;
+  background-color: transparent;
+}
+
+.weatherContainer {
+  display: flex;
+}
+
+.weatherBox {
+  margin: 0 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.weatherText {
+  color: #2f3b55;
+  font-size: 13px;
+}
+
+.provide {
+  font-size: 11px;
+  color: #2f3b55;
+  text-align: right;
+  position: relative;
+  margin-bottom: 5px;
+}/*# sourceMappingURL=deviceList.css.map */
