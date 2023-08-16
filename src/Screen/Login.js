@@ -3,17 +3,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AccountStore from "../Account/AccountStore";
 import { LoginSQL } from "../DataBase/DataBaseSQL";
-import "../styles/login/login.css";
+import "../styles/login.css";
 import Switch from "react-switch";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
 
 export default function Login() {
   let navigate = useNavigate();
 
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(true);
 
   useEffect(() => {
     // 컴포넌트가 마운트될 때 로컬 스토리지에서 상태 가져오기
@@ -117,14 +115,6 @@ export default function Login() {
         <div className="buttonContainer">
           <button onClick={LoginClick} className="loginBtn">
             로그인
-          </button>
-          <button
-            onClick={() => {
-              alert("서비스 준비 중입니다");
-            }}
-            className="joinBox"
-          >
-            회원가입
           </button>
         </div>
       </div>

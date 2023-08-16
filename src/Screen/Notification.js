@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Components/Header";
-import "../styles/notification/notification.css";
+import "../styles/notification.css";
 import AccountStore from "../Account/AccountStore";
 import { useNavigate } from "react-router-dom";
 import { DeviceListSQL } from "../DataBase/DataBaseSQL";
@@ -18,12 +18,12 @@ const Notification = () => {
       const Data = await DeviceListSQL(id);
       setDeviceList(Data);
     };
-    id ? action() : navigate("/login");
+    id ? action() : navigate("/");
   }, [id]);
   return (
     <div>
       <Header />
-      <div style={{ paddingTop: "10vh" }}>
+      <div style={{ paddingTop: "80px" }}>
         <div className="notiDeviceListText">알림</div>
         <div className="notiContainer">
           <div className="notiContent" style={{ backgroundColor: "#ffe8e8" }}>

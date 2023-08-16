@@ -1,0 +1,26 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.deviceListBox {
+  padding-top: 70px;
+}
+
+.devListTxt {
+  color: white;
+  font-size: 18px;
+  padding: 18px 15px 5px 15px;
+}
+
+.loadingBox {
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading {
+  text-align: center;
+  color: white;
+}

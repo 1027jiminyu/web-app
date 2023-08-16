@@ -3,7 +3,7 @@ import { RecentDataSQL } from "../DataBase/DataBaseSQL";
 import _ from "lodash";
 import AccountStore from "../Account/AccountStore";
 import WsApi from "../Store/wsApi";
-import "../styles/deviceList/deviceList.css";
+import "../styles/deviceList.css";
 import DataShowBtn from "./DataShowBtn";
 import Weather from "./Weather";
 
@@ -116,22 +116,33 @@ const DeviceList = ({ deviceList }) => {
 
   return deviceList.map((e, i) => (
     <div className="deviceBox" key={i}>
+      {devIdArr[0] ? (
+        <Weather latLongiResult={latLongiResult[i]} />
+      ) : (
+        <div>날씨 불러오는 중...</div>
+      )}
       <div className="title">
         <div className="nameText">
+          <div
+            className="rectBox"
+            style={
+              e.dev_position.includes("내부")
+                ? { backgroundColor: "#2f3b55" }
+                : e.dev_position.includes("외부")
+                ? { backgroundColor: "#6688D5" }
+                : { backgroundColor: "#B8C3DB" }
+            }
+          ></div>
           {e.dev_position
-            ? e.dev_position.length <= 13
+            ? e.dev_position.length <= 20
               ? e.dev_position
-              : e.dev_position.substring(0, 13) + "..."
-            : e.depart.length <= 13
+              : e.dev_position.substring(0, 20) + "..."
+            : e.depart.length <= 20
             ? e.depart
-            : e.depart.substring(0, 13) + "..."}
+            : e.depart.substring(0, 20) + "..."}
         </div>
-        {devIdArr[0] ? (
-          <Weather latLongiResult={latLongiResult[i]} />
-        ) : (
-          <div>날씨 불러오는 중...</div>
-        )}
       </div>
+
       <div className="deviceListContent">
         {arry?.includes(e.id) ? (
           <div>
@@ -139,7 +150,13 @@ const DeviceList = ({ deviceList }) => {
             <DataShowBtn deviceid={e.id} id={id} />
           </div>
         ) : (
-          <div style={{ color: "#2f3b55", textAlign: "center" }}>
+          <div
+            style={{
+              color: "#ff0000",
+              textAlign: "center",
+              marginBottom: "5px",
+            }}
+          >
             장비 연결이 끊어졌습니다
           </div>
         )}

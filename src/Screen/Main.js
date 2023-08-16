@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
 import DeviceList from "../Components/DeviceList";
 import Search from "../Components/Search";
-import "../styles/main/main.css";
+import "../styles/main.css";
 import { ThreeDots } from "react-loader-spinner";
 
 const Main = () => {
@@ -40,7 +40,7 @@ const Main = () => {
       setInitialDeviceList([...Data]);
       setLoading(true);
     };
-    id ? action() : navigate("/login");
+    id ? action() : navigate("/");
   }, [id]);
 
   return (

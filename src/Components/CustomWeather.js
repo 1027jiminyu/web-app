@@ -1,4 +1,4 @@
-import "../styles/deviceList/deviceList.css";
+import "../styles/deviceList.css";
 import { PiThermometerSimpleFill } from "react-icons/pi";
 import { MdWaterDrop } from "react-icons/md";
 import { RiWindyFill } from "react-icons/ri";
@@ -39,23 +39,23 @@ export default function CustomWeather({
     <>
       <div className="weatherContainer">
         <div className="weatherBox">
-          <PiThermometerSimpleFill size={13} color="#2f3b55" />
+          <PiThermometerSimpleFill size={16} color="#2f3b55" />
           <div className="weatherText">{temperature}℃</div>
         </div>
         <div className="weatherBox">
-          <MdWaterDrop size={13} color="#2f3b55" />
+          <MdWaterDrop size={16} color="#2f3b55" />
           <div className="weatherText">{humidity}%</div>
         </div>
         <div className="weatherBox">
-          <RiWindyFill size={13} color="#2f3b55" />
+          <RiWindyFill size={16} color="#2f3b55" />
           <div className="weatherText">{windSpeed}㎧</div>
         </div>
         <div className="weatherBox">
-          <TbWindmill size={13} color="#2f3b55" />
+          <TbWindmill size={16} color="#2f3b55" />
           <WeatherIcon windDegree={windDegree} />
         </div>
+        <div className="provide">제공 : 기상청</div>
       </div>
-      <div className="provide">제공 : 기상청</div>
     </>
   );
 }
