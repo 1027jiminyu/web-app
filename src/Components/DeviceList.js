@@ -98,7 +98,7 @@ const DeviceList = ({ deviceList }) => {
             }}
             className={item >= 0 ? "sensorVal" : "inactiveSensorVal"}
           >
-            {item >= 0 ? item : "--"}
+            {item >= 0 ? parseFloat(item).toFixed(3) : "--"}
           </div>
         </div>
       ))}
