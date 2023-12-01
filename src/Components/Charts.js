@@ -19,6 +19,13 @@ const Chart = ({ getDevData }) => {
       grid: {
         show: false,
       },
+      tooltip: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+        width: 4,
+      },
     };
 
     const series = [
@@ -47,13 +54,13 @@ const Chart = ({ getDevData }) => {
                 <div className="center">
                   <div className="maxMinFontSize">최대&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#ff3b65" }}>
-                    {Math.max(...series[0].data)}
+                    {parseFloat(Math.max(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
                 <div className="center">
                   <div className="maxMinFontSize">최소&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#ff3b65" }}>
-                    {Math.min(...series[0].data)}
+                    {parseFloat(Math.min(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -91,6 +98,13 @@ const Chart = ({ getDevData }) => {
       grid: {
         show: false,
       },
+      tooltip: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+        width: 4,
+      },
     };
 
     const series = [
@@ -118,13 +132,13 @@ const Chart = ({ getDevData }) => {
                 <div className="center">
                   <div className="maxMinFontSize">최대&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#f2c700" }}>
-                    {Math.max(...series[0].data)}
+                    {parseFloat(Math.max(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
                 <div className="center">
                   <div className="maxMinFontSize">최소&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#f2c700" }}>
-                    {Math.min(...series[0].data)}
+                    {parseFloat(Math.min(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -161,6 +175,13 @@ const Chart = ({ getDevData }) => {
       grid: {
         show: false,
       },
+      tooltip: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+        width: 4,
+      },
     };
 
     const series = [
@@ -188,13 +209,13 @@ const Chart = ({ getDevData }) => {
                 <div className="center">
                   <div className="maxMinFontSize">최대&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#EA3BFF" }}>
-                    {Math.max(...series[0].data)}
+                    {parseFloat(Math.max(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
                 <div className="center">
                   <div className="maxMinFontSize">최소&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#EA3BFF" }}>
-                    {Math.min(...series[0].data)}
+                    {parseFloat(Math.min(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -231,6 +252,13 @@ const Chart = ({ getDevData }) => {
       grid: {
         show: false,
       },
+      tooltip: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+        width: 4,
+      },
     };
 
     const series = [
@@ -258,13 +286,13 @@ const Chart = ({ getDevData }) => {
                 <div className="center">
                   <div className="maxMinFontSize">최대&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#53BC9B" }}>
-                    {Math.max(...series[0].data)}
+                    {parseFloat(Math.max(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
                 <div className="center">
                   <div className="maxMinFontSize">최소&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#53BC9B" }}>
-                    {Math.min(...series[0].data)}
+                    {parseFloat(Math.min(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -301,6 +329,13 @@ const Chart = ({ getDevData }) => {
       grid: {
         show: false,
       },
+      tooltip: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+        width: 4,
+      },
     };
 
     const series = [
@@ -328,13 +363,13 @@ const Chart = ({ getDevData }) => {
                 <div className="center">
                   <div className="maxMinFontSize">최대&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#f19c50" }}>
-                    {Math.max(...series[0].data)}
+                    {parseFloat(Math.max(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
                 <div className="center">
                   <div className="maxMinFontSize">최소&nbsp;&nbsp;</div>
                   <div className="maxMinFontSize" style={{ color: "#f19c50" }}>
-                    {Math.min(...series[0].data)}
+                    {parseFloat(Math.min(...series[0].data)).toFixed(2)}
                   </div>
                 </div>
               </div>

@@ -12,7 +12,15 @@ const DeviceList = ({ deviceList }) => {
   const [deviceRecentData, setDeviceRecentData] = useState([]);
   const sensorArr = ["NH3", "H2S", "ACID", "INDOLES"];
   const sensorColor = ["#FF3B65", "#f2c700", "#EA3BFF", "#53BC9B"];
+  const sensorBoxWidth = [
+    { width: "86vw" },
+    { width: "42vw" },
+    { width: "27vw" },
+    { width: "19vw" },
+    { width: "15.8vw" },
+  ];
   const [arry, setArry] = useState([]);
+  const [prevData, setPrevData] = useState([]);
 
   const RecentDataAction = async () => {
     const DevRecentData = await RecentDataSQL(id);
@@ -33,7 +41,7 @@ const DeviceList = ({ deviceList }) => {
     setDeviceRecentData(sensorData);
   };
 
-  setTimeout(RecentDataAction, 10000);
+  // setTimeout(RecentDataAction, 60000);
 
   const devIdArr = deviceRecentData.slice(0, 1).map((data) => data.data);
   // console.log('devIdArrdevIdArr', devIdArr); //장비아이디 갯수
@@ -44,7 +52,8 @@ const DeviceList = ({ deviceList }) => {
 
     //현재 가동중인 장비 전체 리스트에서 중복제거
     setArry(arr && [...new Set(arr)]);
-    console.log("2222222222", arry);
+    // console.log("2222222222", arry);
+    setPrevData([...arry]);
   };
 
   const recentData = deviceRecentData.slice(1, 5).map((data) => data.data);
@@ -63,11 +72,7 @@ const DeviceList = ({ deviceList }) => {
       const newItem = [latLongi[0][i], latLongi[1][i]];
       latLongiResult.push(newItem);
     }
-    // console.log(latLongiResult);
   }
-  //  else {
-  //   console.error("latLongi 배열이 잘못되었습니다");
-  // }
 
   let deviceNumArr = [];
   if (devIdArr && devIdArr[0]) {
@@ -84,35 +89,108 @@ const DeviceList = ({ deviceList }) => {
   for (let i = 0; i < deviceNumArr.length; i += 4) {
     chunkedArray.push(deviceNumArr.slice(i, i + 4));
   }
+  const sensorNum = chunkedArray.map(
+    (chunk, index) => chunk.filter((item) => parseFloat(item) >= 0).length
+  );
 
   const renderedArray = chunkedArray.map((chunk, index) => (
     <div key={index} className="sensorContent">
-      {chunk.map((item, i) => (
-        <div key={i}>
-          <div className={item >= 0 ? "sensor" : "inactiveSensor"}>
-            {sensorArr[i]}
+      {chunk.map((item, i) =>
+        item >= 0 ? (
+          <div key={i}>
+            <div
+              className={item >= 0 ? "sensor" : "inactiveSensor"}
+              style={
+                sensorNum[index] === 1
+                  ? sensorBoxWidth[0]
+                  : sensorNum[index] === 2
+                  ? sensorBoxWidth[1]
+                  : sensorNum[index] === 3
+                  ? sensorBoxWidth[2]
+                  : sensorNum[index] === 4
+                  ? sensorBoxWidth[3]
+                  : sensorBoxWidth[4]
+              }
+            >
+              {sensorArr[i]}
+            </div>
+            <div
+              style={{
+                color: item >= 0 ? `${sensorColor[i]}` : "#a3afc9",
+                ...(sensorNum[index] === 1
+                  ? sensorBoxWidth[0]
+                  : sensorNum[index] === 2
+                  ? sensorBoxWidth[1]
+                  : sensorNum[index] === 3
+                  ? sensorBoxWidth[2]
+                  : sensorNum[index] === 4
+                  ? sensorBoxWidth[3]
+                  : sensorBoxWidth[4]),
+              }}
+              className={item >= 0 ? "sensorVal" : "inactiveSensorVal"}
+            >
+              {item >= 0 ? parseFloat(item).toFixed(2) : "--"}
+            </div>
           </div>
-          <div
-            style={{
-              color: item >= 0 ? `${sensorColor[i]}` : "#a3afc9",
-            }}
-            className={item >= 0 ? "sensorVal" : "inactiveSensorVal"}
-          >
-            {item >= 0 ? parseFloat(item).toFixed(3) : "--"}
-          </div>
-        </div>
-      ))}
-      <div>
+        ) : (
+          <div key={i} />
+        )
+      )}
+      {/* <div>
         <div className="inactiveSensor">CO2</div>
         <div className="inactiveSensorVal">{"--"}</div>
-      </div>
+      </div> */}
     </div>
   ));
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   RecentDataAction();
+  //   deviceOn();
+  // }, [deviceList.id]);
+
+  const runActions = () => {
     RecentDataAction();
     deviceOn();
+    setTimeout(runActions, 60000);
+  };
+
+  useEffect(() => {
+    runActions();
+    // 컴포넌트가 언마운트될 때 타이머 해제
+    return () => clearTimeout(runActions);
   }, [deviceList.id]);
+
+  function postWebView() {
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage("device off");
+    }
+  }
+
+  useEffect(() => {
+    if (prevData.length > 0) {
+      if (!arraysAreEqual(prevData, arry)) {
+        // 데이터가 변경되었을 때 메시지 전송
+        postWebView();
+        // 현재 데이터를 이전 데이터로 설정
+        setPrevData([...arry]);
+      }
+    }
+  }, [arry]);
+
+  const arraysAreEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) {
+      console.log("길이가 다름");
+      return false;
+    }
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        console.log("길이가 같은 경우, 각각의 요소를 비교해서 다른 경우");
+        return false;
+      }
+    }
+    console.log("두 배열이 동일함");
+    return true;
+  };
 
   return deviceList.map((e, i) => (
     <div className="deviceBox" key={i}>
@@ -133,16 +211,9 @@ const DeviceList = ({ deviceList }) => {
                 : { backgroundColor: "#B8C3DB" }
             }
           ></div>
-          {e.dev_position
-            ? e.dev_position.length <= 20
-              ? e.dev_position
-              : e.dev_position.substring(0, 20) + "..."
-            : e.depart.length <= 20
-            ? e.depart
-            : e.depart.substring(0, 20) + "..."}
+          {e.dev_position ? e.dev_position : e.depart}
         </div>
       </div>
-
       <div className="deviceListContent">
         {arry?.includes(e.id) ? (
           <div>
