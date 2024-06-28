@@ -31,10 +31,10 @@ export default function CustomWeather({
   windSpeed,
   windDegree,
 }) {
-  // console.log('온도', temperature);
-  // console.log('습도', humidity);
-  // console.log('풍속', windSpeed);
-  // console.log('풍향', windDegree);
+  // console.log("온도", temperature);
+  // console.log("습도", humidity);
+  // console.log("풍속", windSpeed);
+  // console.log("풍향", windDegree);
   return (
     <>
       <div className="weatherContainer">

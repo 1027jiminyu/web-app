@@ -39,18 +39,18 @@ const Header = () => {
         {AccountStore.depart ? AccountStore.depart : navigate("/login")}
       </div>
       <div className="headerBtnBox">
-        {/* <button
+        <button
           onClick={() => {
             navigate("/notification");
           }}
           className="headerBtn"
         >
-          <div className="notiBox">
-                        <div className="notiBoxTxt">10</div>
-                    </div>
+          {/* <div className="notiBox">
+            <div className="notiBoxTxt">10</div>
+          </div> */}
           <MdOutlineNotificationsNone size={23} color="#2f3b55" />
           <div>알림</div>
-        </button> */}
+        </button>
         <button
           onClick={() => {
             handleLogout();

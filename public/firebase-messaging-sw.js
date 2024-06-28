@@ -1,28 +1,22 @@
-importScripts("https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.5.0/firebase-messaging.js");
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.6.8/firebase-messaging-compat.js"
+);
 
-const config = {
-  //프로젝트 설정 > 일반 > 하단의 내 앱 부분 복사
-};
-
-// Initialize Firebase
-firebase.initializeApp(config);
+firebase.initializeApp({
+  apiKey: "AIzaSyD50UWhGky8CTW3nbp_TtjPxfLrEDcYC1c",
+  authDomain: "inent-650b3.firebaseapp.com",
+  projectId: "inent-650b3",
+  storageBucket: "inent-650b3.appspot.com",
+  messagingSenderId: "796730025932",
+  appId: "1:796730025932:web:5dfe67250bbde3ef095f69",
+  measurementId: "G-77WDX0HRGC",
+});
 
 const messaging = firebase.messaging();
 
-//백그라운드 서비스워커 설정
-messaging.onBackgroundMessage(messaging, (payload) => {
-  console.log(
-    "[firebase-messaging-sw.js] Received background message ",
-    payload
-  );
-
-  // Customize notification here
-  const notificationTitle = "Background Message Title";
-  const notificationOptions = {
-    body: payload,
-    icon: "/firebase-logo.png",
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+messaging.onBackgroundMessage((payload) => {
+  console.log("Received background message:", payload);
 });

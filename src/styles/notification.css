@@ -20,8 +20,15 @@
   width: 88%;
 }
 
-.notiContent {
-  width: 85%;
+.notiContentNull {
+  color: #f4f8ff;
+  margin: 10px auto;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 88%;
+  height: 85vh;
 }
 
 .separator {

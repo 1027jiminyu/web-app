@@ -35,7 +35,7 @@ const Chart = ({ getDevData }) => {
         color: "#FF3B65",
       },
     ];
-    console.log(series[0].data);
+    // console.log(series[0].data);
 
     return (
       <div>

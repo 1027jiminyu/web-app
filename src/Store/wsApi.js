@@ -1,20 +1,24 @@
-import moment from 'moment';
-import {io} from 'socket.io-client';
+import moment from "moment";
+import { io } from "socket.io-client";
+// const wsHost =
+//   process.env.NODE_ENV === "development"
+//     ? "ws://175.208.89.113:7000"
+//     : "ws://175.208.89.113:7000";
 const wsHost =
-  process.env.NODE_ENV === 'development'
-    ? 'ws://175.208.89.113:7000'
-    : 'ws://175.208.89.113:7000';
+  process.env.NODE_ENV === "development"
+    ? "ws://59.2.92.184:7000"
+    : "ws://59.2.92.184:7000";
 const wsHost1 =
-  process.env.NODE_ENV === 'development'
-    ? 'ws://localhost:3001'
-    : 'ws://localhost:3001';
+  process.env.NODE_ENV === "development"
+    ? "ws://localhost:3001"
+    : "ws://localhost:3001";
 
 class WsApi {
   static serverInfo = {
-    serverdn: 'livestockdb.com',
-    serverip: '175.208.89.113',
-    socket: 'websocket',
-    portNo: '7000',
+    serverdn: "livestockdb.com",
+    serverip: "175.208.89.113",
+    socket: "websocket",
+    portNo: "7000",
   };
 
   static ws;
@@ -23,9 +27,9 @@ class WsApi {
   static callback1 = {};
 
   static async connect() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws = new WebSocket(wsHost);
-      this.ws.onmessage = event => {
+      this.ws.onmessage = (event) => {
         try {
           // 장비가 연결되지 않은 상태에서 주석을 풀고 테스트를 하면,
           // event.data = id not Found 인 경우가 되어, JSON.parse의 SyntaxError 발생함.
@@ -50,13 +54,13 @@ class WsApi {
   //======================================소켓==================================
   //▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
   static async connect1() {
-    return new Promise(resolve => {
-      this.ws1 = io(wsHost1, {transports: ['websocket']});
-      this.ws1.on('connect', () => {
+    return new Promise((resolve) => {
+      this.ws1 = io(wsHost1, { transports: ["websocket"] });
+      this.ws1.on("connect", () => {
         resolve();
         //console.log(this.ws1.connected); // true
       });
-      this.ws1.on('disconnect', () => {
+      this.ws1.on("disconnect", () => {
         this.ws1.connect();
       });
     });
@@ -69,16 +73,18 @@ class WsApi {
     if (!this.ws) {
       await this.connect();
     }
-    return new Promise(resolve => {
-      this.callback['connectList'] && this.callback['connectList']();
-      this.callback['connectList'] = resolve;
+    return new Promise((resolve) => {
+      this.callback["connectList"] && this.callback["connectList"]();
+      this.callback["connectList"] = resolve;
 
-      this.ws.send(
-        JSON.stringify({
-          command: 'connectList',
-          deviceId: userid,
-        }),
-      );
+      if (this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(
+          JSON.stringify({
+            command: "connectList",
+            deviceId: userid,
+          })
+        );
+      }
     });
   }
 
@@ -89,13 +95,13 @@ class WsApi {
     if (!this.ws1) {
       await this.connect1();
     }
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws1.emit(
-        'getConnectList',
+        "getConnectList",
         JSON.stringify({
-          command: 'connectList',
+          command: "connectList",
           deviceId: userid,
-        }),
+        })
       );
     });
   }
@@ -107,58 +113,58 @@ class WsApi {
       await this.connect();
     }
 
-    let {arr} = await this.getConnectList(userid);
+    let { arr } = await this.getConnectList(userid);
     //console.log('getSystemInof connected list: ')
     //console.log(arr);
     if (arr.indexOf(deviceid) == -1) {
-      return alert('장비가 연결되지 않았습니다.');
+      return alert("장비가 연결되지 않았습니다.");
     }
     // await this.getConnectList();
 
     let systemInfo;
 
-    if (manufacturer == 'insys') {
-      systemInfo = new Promise(resolve => {
+    if (manufacturer == "insys") {
+      systemInfo = new Promise((resolve) => {
         // callback을 받을 인자를 넣어야 제대로 받는다. status는 보내는 인자고, statusResult가 받는 인자로 정의되어 있다.
-        this.callback['statusResult'] && this.callback['statusResult']();
-        this.callback['statusResult'] = resolve;
+        this.callback["statusResult"] && this.callback["statusResult"]();
+        this.callback["statusResult"] = resolve;
 
         this.ws.send(
           JSON.stringify({
-            command: 'orderInsys',
+            command: "orderInsys",
             deviceId: userid,
             sendto: deviceid,
             ordermsg: JSON.stringify({
-              company: 'insys',
-              name: 'server',
-              timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+              company: "insys",
+              name: "server",
+              timestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
               deviceId: deviceid,
-              type: 'status',
+              type: "status",
             }),
-          }),
+          })
         );
       });
-    } else if (manufacturer == 'jtron') {
-      systemInfo = new Promise(resolve => {
-        this.callback['sysInfo'] && this.callback['sysInfo']();
-        this.callback['sysInfo'] = resolve;
+    } else if (manufacturer == "jtron") {
+      systemInfo = new Promise((resolve) => {
+        this.callback["sysInfo"] && this.callback["sysInfo"]();
+        this.callback["sysInfo"] = resolve;
         this.ws.send(
           JSON.stringify({
-            command: 'orderJtron',
+            command: "orderJtron",
             deviceid: userid,
             sendto: deviceid,
             ordermsg: JSON.stringify({
-              company: 'JTRON',
-              name: 'server',
+              company: "JTRON",
+              name: "server",
               deviceid: deviceid,
-              sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-              type: 'sysInfo',
+              sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+              type: "sysInfo",
             }),
-          }),
+          })
         );
       });
     } else {
-      alert('해당 장비의 제조사가 올바르지 않습니다.');
+      alert("해당 장비의 제조사가 올바르지 않습니다.");
     }
 
     return systemInfo;
@@ -170,53 +176,53 @@ class WsApi {
     if (!this.ws1) {
       await this.connect1();
     }
-    let {arr} = await this.getConnectList1(userid);
+    let { arr } = await this.getConnectList1(userid);
 
     if (arr.indexOf(deviceid) == -1) {
-      return alert('장비가 연결되지 않았습니다.');
+      return alert("장비가 연결되지 않았습니다.");
     }
     // await this.getConnectList();
 
     let systemInfo;
 
-    if (manufacturer == 'insys') {
-      systemInfo = new Promise(resolve => {
+    if (manufacturer == "insys") {
+      systemInfo = new Promise((resolve) => {
         this.ws1.emit(
-          'getSystemInfo',
+          "getSystemInfo",
           JSON.stringify({
-            command: 'orderInsys',
+            command: "orderInsys",
             deviceId: userid,
             sendto: deviceid,
             ordermsg: JSON.stringify({
-              company: 'insys',
-              name: 'server',
-              timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+              company: "insys",
+              name: "server",
+              timestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
               deviceId: deviceid,
-              type: 'status',
+              type: "status",
             }),
-          }),
+          })
         );
       });
-    } else if (manufacturer == 'jtron') {
-      systemInfo = new Promise(resolve => {
+    } else if (manufacturer == "jtron") {
+      systemInfo = new Promise((resolve) => {
         this.ws1.emit(
-          'getSystemInfo',
+          "getSystemInfo",
           JSON.stringify({
-            command: 'orderJtron',
+            command: "orderJtron",
             deviceid: userid,
             sendto: deviceid,
             ordermsg: JSON.stringify({
-              company: 'JTRON',
-              name: 'server',
+              company: "JTRON",
+              name: "server",
               deviceid: deviceid,
-              sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-              type: 'sysInfo',
+              sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+              type: "sysInfo",
             }),
-          }),
+          })
         );
       });
     } else {
-      alert('해당 장비의 제조사가 올바르지 않습니다.');
+      alert("해당 장비의 제조사가 올바르지 않습니다.");
     }
 
     return systemInfo;
@@ -234,26 +240,26 @@ class WsApi {
     insideTime,
     outsideTime,
     restTime,
-    dataInterval,
+    dataInterval
   ) {
     if (!this.ws) {
       await this.connect();
     }
-    return new Promise(resolve => {
-      this.callback['setup'] && this.callback['setup']();
-      this.callback['setup'] = resolve;
+    return new Promise((resolve) => {
+      this.callback["setup"] && this.callback["setup"]();
+      this.callback["setup"] = resolve;
 
       this.ws.send(
         JSON.stringify({
-          command: 'orderInsys',
+          command: "orderInsys",
           deviceId: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'insys',
-            name: 'server',
-            timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+            company: "insys",
+            name: "server",
+            timestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
             deviceId: deviceid,
-            type: 'setup',
+            type: "setup",
             setup: {
               insideTime: insideTime,
               outsideTime: outsideTime,
@@ -261,7 +267,7 @@ class WsApi {
               dataInterval: dataInterval,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -278,24 +284,24 @@ class WsApi {
     insideTime,
     outsideTime,
     restTime,
-    dataInterval,
+    dataInterval
   ) {
     if (!this.ws1) {
       await this.connect1();
     }
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws.emit(
-        'setup',
+        "setup",
         JSON.stringify({
-          command: 'orderInsys',
+          command: "orderInsys",
           deviceId: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'insys',
-            name: 'server',
-            timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+            company: "insys",
+            name: "server",
+            timestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
             deviceId: deviceid,
-            type: 'setup',
+            type: "setup",
             setup: {
               insideTime: insideTime,
               outsideTime: outsideTime,
@@ -303,7 +309,7 @@ class WsApi {
               dataInterval: dataInterval,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -315,27 +321,27 @@ class WsApi {
       await this.connect();
     }
 
-    return new Promise(resolve => {
-      this.callback['sample'] && this.callback['sample']();
-      this.callback['sample'] = resolve;
+    return new Promise((resolve) => {
+      this.callback["sample"] && this.callback["sample"]();
+      this.callback["sample"] = resolve;
 
       this.ws.send(
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceId: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceId: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'sample',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "sample",
             sample: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -348,25 +354,25 @@ class WsApi {
       await this.connect1();
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws.emit(
-        'sample',
+        "sample",
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceId: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceId: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'sample',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "sample",
             sample: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -381,27 +387,27 @@ class WsApi {
 
     await this.getConnectList();
 
-    return new Promise(resolve => {
-      this.callback['clean'] && this.callback['clean']();
-      this.callback['clean'] = resolve;
+    return new Promise((resolve) => {
+      this.callback["clean"] && this.callback["clean"]();
+      this.callback["clean"] = resolve;
 
       this.ws.send(
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'clean',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "clean",
             clean: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -416,25 +422,25 @@ class WsApi {
 
     await this.getConnectList1();
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws.emit(
-        'clean',
+        "clean",
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'clean',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "clean",
             clean: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -447,27 +453,27 @@ class WsApi {
       await this.connect();
     }
 
-    return new Promise(resolve => {
-      this.callback['stop'] && this.callback['stop']();
-      this.callback['stop'] = resolve;
+    return new Promise((resolve) => {
+      this.callback["stop"] && this.callback["stop"]();
+      this.callback["stop"] = resolve;
 
       this.ws.send(
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'stop',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "stop",
             stop: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -480,25 +486,25 @@ class WsApi {
       await this.connect1();
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws.emit(
-        'stop',
+        "stop",
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'stop',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "stop",
             stop: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -511,27 +517,27 @@ class WsApi {
       await this.connect();
     }
 
-    return new Promise(resolve => {
-      this.callback['autoSample'] && this.callback['autoSample']();
-      this.callback['autoSample'] = resolve;
+    return new Promise((resolve) => {
+      this.callback["autoSample"] && this.callback["autoSample"]();
+      this.callback["autoSample"] = resolve;
 
       this.ws.send(
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'autoSample',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "autoSample",
             autoSample: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -544,25 +550,25 @@ class WsApi {
       await this.connect1();
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws.emit(
-        'autoSample',
+        "autoSample",
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'autoSample',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "autoSample",
             autoSample: {
-              actuate: 'On',
+              actuate: "On",
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -575,27 +581,27 @@ class WsApi {
       await this.connect();
     }
 
-    return new Promise(resolve => {
-      this.callback['autoSampleLv'] && this.callback['autoSampleLv']();
-      this.callback['autoSampleLv'] = resolve;
+    return new Promise((resolve) => {
+      this.callback["autoSampleLv"] && this.callback["autoSampleLv"]();
+      this.callback["autoSampleLv"] = resolve;
 
       this.ws.send(
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'autoSampleLv',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "autoSampleLv",
             autoSampleLv: {
               value: value,
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }
@@ -608,25 +614,25 @@ class WsApi {
       await this.connect1();
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws.emit(
-        'autoSampleLv',
+        "autoSampleLv",
         JSON.stringify({
-          command: 'orderJtron',
+          command: "orderJtron",
           deviceid: userid,
           sendto: deviceid,
           ordermsg: JSON.stringify({
-            company: 'JTRON',
-            name: 'server',
+            company: "JTRON",
+            name: "server",
             deviceid: deviceid,
-            sendDt: moment().format('YYYY-MM-DD HH:mm:ss'),
-            type: 'autoSampleLv',
+            sendDt: moment().format("YYYY-MM-DD HH:mm:ss"),
+            type: "autoSampleLv",
             autoSampleLv: {
               value: value,
               ...this.serverInfo,
             },
           }),
-        }),
+        })
       );
     });
   }

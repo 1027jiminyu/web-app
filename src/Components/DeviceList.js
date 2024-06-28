@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { RecentDataSQL } from "../DataBase/DataBaseSQL";
 import _ from "lodash";
 import AccountStore from "../Account/AccountStore";
@@ -6,8 +6,9 @@ import WsApi from "../Store/wsApi";
 import "../styles/deviceList.css";
 import DataShowBtn from "./DataShowBtn";
 import Weather from "./Weather";
+import PredResultBox from "./PredResultBox";
 
-const DeviceList = ({ deviceList }) => {
+const DeviceList = ({ deviceList, alertFarmName }) => {
   const id = AccountStore.userid;
   const [deviceRecentData, setDeviceRecentData] = useState([]);
   const sensorArr = ["NH3", "H2S", "ACID", "INDOLES"];
@@ -20,7 +21,22 @@ const DeviceList = ({ deviceList }) => {
     { width: "15.8vw" },
   ];
   const [arry, setArry] = useState([]);
-  const [prevData, setPrevData] = useState([]);
+  console.log("alertFarmName", alertFarmName);
+  const refMap = useRef({});
+
+  useEffect(() => {
+    console.log(refMap.current); // 콘솔에서 refMap의 현재 상태를 확인
+    // 나머지 코드
+  }, [deviceList]);
+
+  useEffect(() => {
+    if (alertFarmName && refMap.current[alertFarmName]) {
+      // 해당 항목으로 스크롤 이동
+      refMap.current[alertFarmName].scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [alertFarmName]);
 
   const RecentDataAction = async () => {
     const DevRecentData = await RecentDataSQL(id);
@@ -40,25 +56,30 @@ const DeviceList = ({ deviceList }) => {
     }
     setDeviceRecentData(sensorData);
   };
+  setTimeout(RecentDataAction, 60000);
 
-  // setTimeout(RecentDataAction, 60000);
+  const devIdArr = deviceRecentData.slice(0, 1).map((data) => data.data); //장비아이디 갯수
+  console.log("devIdArr", devIdArr);
 
-  const devIdArr = deviceRecentData.slice(0, 1).map((data) => data.data);
-  // console.log('devIdArrdevIdArr', devIdArr); //장비아이디 갯수
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      deviceOn();
+      // console.log("1분에 한번씩 deviceOn함수 호출");
+    }, 30 * 1e3);
+
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 타이머 제거
+  }, []);
 
   const deviceOn = async () => {
     //현재 가동중인 장비 전체 리스트를 가져온다.
     let { arr } = await WsApi.getConnectList(AccountStore.userid);
 
     //현재 가동중인 장비 전체 리스트에서 중복제거
-    setArry(arr && [...new Set(arr)]);
-    // console.log("2222222222", arry);
-    setPrevData([...arry]);
+    arr && setArry([...new Set(arr)]);
   };
 
   const recentData = deviceRecentData.slice(1, 5).map((data) => data.data);
   const latLongi = deviceRecentData.slice(12, 14).map((data) => data.data);
-  // console.log('latLongi', latLongi);
 
   let latLongiResult = [];
   if (
@@ -84,14 +105,18 @@ const DeviceList = ({ deviceList }) => {
   } else {
     console.log("이중배열이 유효하지 않습니다.");
   }
+  // console.log("deviceNumArr", deviceNumArr);
 
   const chunkedArray = [];
   for (let i = 0; i < deviceNumArr.length; i += 4) {
     chunkedArray.push(deviceNumArr.slice(i, i + 4));
   }
+  // console.log("chunkedArray", chunkedArray);
+
   const sensorNum = chunkedArray.map(
     (chunk, index) => chunk.filter((item) => parseFloat(item) >= 0).length
   );
+  // console.log("sensorNum", sensorNum);
 
   const renderedArray = chunkedArray.map((chunk, index) => (
     <div key={index} className="sensorContent">
@@ -143,54 +168,10 @@ const DeviceList = ({ deviceList }) => {
     </div>
   ));
 
-  // useEffect(() => {
-  //   RecentDataAction();
-  //   deviceOn();
-  // }, [deviceList.id]);
-
-  const runActions = () => {
+  useEffect(() => {
     RecentDataAction();
     deviceOn();
-    setTimeout(runActions, 60000);
-  };
-
-  useEffect(() => {
-    runActions();
-    // 컴포넌트가 언마운트될 때 타이머 해제
-    return () => clearTimeout(runActions);
   }, [deviceList.id]);
-
-  function postWebView() {
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage("device off");
-    }
-  }
-
-  useEffect(() => {
-    if (prevData.length > 0) {
-      if (!arraysAreEqual(prevData, arry)) {
-        // 데이터가 변경되었을 때 메시지 전송
-        postWebView();
-        // 현재 데이터를 이전 데이터로 설정
-        setPrevData([...arry]);
-      }
-    }
-  }, [arry]);
-
-  const arraysAreEqual = (arr1, arr2) => {
-    if (arr1.length !== arr2.length) {
-      console.log("길이가 다름");
-      return false;
-    }
-    for (let i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) {
-        console.log("길이가 같은 경우, 각각의 요소를 비교해서 다른 경우");
-        return false;
-      }
-    }
-    console.log("두 배열이 동일함");
-    return true;
-  };
 
   return deviceList.map((e, i) => (
     <div className="deviceBox" key={i}>
@@ -199,7 +180,12 @@ const DeviceList = ({ deviceList }) => {
       ) : (
         <div>날씨 불러오는 중...</div>
       )}
-      <div className="title">
+      <div
+        className="title"
+        ref={(el) => {
+          refMap.current[e.dev_position] = el;
+        }}
+      >
         <div className="nameText">
           <div
             className="rectBox"
@@ -210,13 +196,14 @@ const DeviceList = ({ deviceList }) => {
                 ? { backgroundColor: "#6688D5" }
                 : { backgroundColor: "#B8C3DB" }
             }
-          ></div>
+          />
           {e.dev_position ? e.dev_position : e.depart}
         </div>
       </div>
       <div className="deviceListContent">
         {arry?.includes(e.id) ? (
           <div>
+            <PredResultBox deviceid={e.id} devIdArr={devIdArr} />
             <div>{renderedArray[i]}</div>
             <DataShowBtn deviceid={e.id} id={id} />
           </div>

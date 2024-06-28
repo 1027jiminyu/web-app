@@ -104,12 +104,88 @@ function DeviceInfoSQL(deviceId) {
 function RefreshSQL(id) {
   let Datas;
 
-  //서버에 ID,PW 전송
+  //서버에 ID 전송
   Server.emit("Refresh", id);
 
   //서버에서 응답
   Datas = new Promise((resolve, reject) => {
     Server.on("Refresh_msg", (err, rows) => {
+      if (err) return resolve(err);
+      resolve(rows);
+    });
+  });
+
+  return Datas;
+}
+//=================================================
+
+//알림List SQL
+function AlertlistsSQL(id) {
+  let Datas;
+
+  //서버에 ID 전송
+  Server.emit("Alertlists", id);
+
+  //서버에서 응답
+  Datas = new Promise((resolve, reject) => {
+    Server.on("Alertlists_msg", (err, rows) => {
+      if (err) return resolve(err);
+      resolve(rows);
+    });
+  });
+
+  return Datas;
+}
+//=================================================
+
+//최신알림 SQL
+function RecentAlertSQL(id) {
+  let Datas;
+
+  //서버에 ID 전송
+  Server.emit("RecentAlert", id);
+
+  //서버에서 응답
+  Datas = new Promise((resolve, reject) => {
+    Server.on("RecentAlert_msg", (err, rows) => {
+      if (err) return resolve(err);
+      resolve(rows);
+    });
+  });
+
+  return Datas;
+}
+//=================================================
+
+//날씨 SQL
+function WeatherSQL(id) {
+  let Datas;
+
+  //서버에 ID 전송
+  Server.emit("Weather", id);
+
+  //서버에서 응답
+  Datas = new Promise((resolve, reject) => {
+    Server.on("Alertlists_msg", (err, rows) => {
+      if (err) return resolve(err);
+      resolve(rows);
+    });
+  });
+
+  return Datas;
+}
+//=================================================
+
+//최신알림 SQL
+function PredictSQL(deviceId) {
+  let Datas;
+
+  //서버에 ID 전송
+  Server.emit("Predict", deviceId);
+
+  //서버에서 응답
+  Datas = new Promise((resolve, reject) => {
+    Server.on("Predict_msg", (err, rows) => {
       if (err) return resolve(err);
       resolve(rows);
     });
@@ -126,4 +202,8 @@ export {
   RecentDataSQL,
   DeviceInfoSQL,
   RefreshSQL,
+  AlertlistsSQL,
+  RecentAlertSQL,
+  WeatherSQL,
+  PredictSQL,
 };
