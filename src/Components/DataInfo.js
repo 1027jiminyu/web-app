@@ -32,6 +32,21 @@ export default function DataInfo(props) {
     setDeviceData(sensorData);
   };
 
+  useEffect(() => {
+    DataAction();
+    InfoAction();
+  }, [props]);
+
+  const getDevData = () => {
+    const devData = deviceData.slice(0, 4).map((data) => data.data); //문자열
+    const dataArr = devData.map((innerArr) =>
+      innerArr.map((str) => Number(str))
+    ); //숫자로 변환
+    // console.log('aaaaaaaaaaaaaaaaaaaaaaa', devData);
+    // console.log('-=-=--=-==-====-=-=-=-=-', dataArr);
+    return dataArr;
+  };
+
   // const DataAction = async () => {
   //   try {
   //     const DevData = await DeviceDataSQL(props.id);
@@ -73,21 +88,6 @@ export default function DataInfo(props) {
   //     // 에러 처리 로직 추가
   //   }
   // };
-
-  useEffect(() => {
-    DataAction();
-    InfoAction();
-  }, [props]);
-
-  const getDevData = () => {
-    const devData = deviceData.slice(0, 4).map((data) => data.data); //문자열
-    const dataArr = devData.map((innerArr) =>
-      innerArr.map((str) => Number(str))
-    ); //숫자로 변환
-    // console.log('aaaaaaaaaaaaaaaaaaaaaaa', devData);
-    // console.log('-=-=--=-==-====-=-=-=-=-', dataArr);
-    return dataArr;
-  };
 
   if (!deviceInfo) {
     return <></>;

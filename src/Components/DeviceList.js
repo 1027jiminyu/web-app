@@ -59,7 +59,7 @@ const DeviceList = ({ deviceList, alertFarmName }) => {
   setTimeout(RecentDataAction, 60000);
 
   const devIdArr = deviceRecentData.slice(0, 1).map((data) => data.data); //장비아이디 갯수
-  console.log("devIdArr", devIdArr);
+  console.log("devIdArr 장비아이디 배열", devIdArr);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -176,7 +176,8 @@ const DeviceList = ({ deviceList, alertFarmName }) => {
   return deviceList.map((e, i) => (
     <div className="deviceBox" key={i}>
       {devIdArr[0] ? (
-        <Weather latLongiResult={latLongiResult[i]} />
+        // <Weather latLongiResult={latLongiResult[i]} />
+        <Weather Result={deviceRecentData} num={i} />
       ) : (
         <div>날씨 불러오는 중...</div>
       )}
@@ -203,7 +204,8 @@ const DeviceList = ({ deviceList, alertFarmName }) => {
       <div className="deviceListContent">
         {arry?.includes(e.id) ? (
           <div>
-            <PredResultBox deviceid={e.id} devIdArr={devIdArr} />
+            {/* <PredResultBox deviceid={e.id} devIdArr={devIdArr} /> */}
+            <PredResultBox deviceId={e.id} id={id} />
             <div>{renderedArray[i]}</div>
             <DataShowBtn deviceid={e.id} id={id} />
           </div>

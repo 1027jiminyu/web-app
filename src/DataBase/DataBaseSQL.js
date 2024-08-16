@@ -176,23 +176,50 @@ function WeatherSQL(id) {
 }
 //=================================================
 
-//최신알림 SQL
+//예측데이터 SQL
+// function PredictSQL(deviceId) {
+//   let Datas;
+
+//   //서버에 ID 전송
+//   Server.emit("Predict", deviceId);
+
+//   //서버에서 응답
+//   Datas = new Promise((resolve, reject) => {
+//     Server.on("Predict_msg", (err, rows) => {
+//       // console.log("Received data:", deviceId);
+//       if (err) return resolve(err);
+//       resolve(rows);
+//     });
+//   });
+
+//   return Datas;
+// }
 function PredictSQL(deviceId) {
-  let Datas;
+  return new Promise((resolve, reject) => {
+    // 서버에 ID 전송
+    Server.emit("Predict", deviceId);
 
-  //서버에 ID 전송
-  Server.emit("Predict", deviceId);
+    // 서버에서 응답
+    const handleResponse = (data) => {
+      // 데이터를 받을 때 처리
+      if (data === "err") {
+        reject("Error occurred while fetching prediction data");
+      } else {
+        resolve(data);
+      }
+    };
 
-  //서버에서 응답
-  Datas = new Promise((resolve, reject) => {
-    Server.on("Predict_msg", (err, rows) => {
-      if (err) return resolve(err);
-      resolve(rows);
-    });
+    // 이벤트 리스너를 한 번만 실행
+    Server.once("Predict_msg", handleResponse);
+
+    // 타임아웃을 설정하여 응답이 오지 않는 경우를 처리할 수도 있습니다
+    setTimeout(() => {
+      Server.off("Predict_msg", handleResponse); // 타임아웃 시 리스너 제거
+      reject("Request timed out");
+    }, 5000); // 예를 들어 5초 타임아웃
   });
-
-  return Datas;
 }
+
 //=================================================
 
 export {

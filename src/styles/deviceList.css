@@ -122,6 +122,7 @@
 }
 
 .sensorContent {
+  width: 91vw;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -135,7 +136,7 @@
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   padding: 3px 1px;
-  width: 15.8vw;
+  /* width: 15.8vw; */
   font-weight: 600;
   font-size: 13px;
 }
@@ -147,7 +148,7 @@
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 3px 1px;
-  width: 15.8vw;
+  /* width: 15.8vw; */
   font-weight: 600;
 }
 
@@ -159,7 +160,7 @@
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   padding: 3px 1px;
-  width: 15.8vw;
+  /* width: 15.8vw; */
   font-weight: 600;
   font-size: 13px;
 }
@@ -172,7 +173,7 @@
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 3px 1px;
-  width: 15.8vw;
+  /* width: 15.8vw; */
   font-weight: 600;
 }
 
@@ -287,4 +288,37 @@
   /* margin-bottom: 5px; */
   padding-top: 2px;
   margin-left: 4px;
+}
+
+.predictBtn {
+  background-color: #fff;
+  border: 1px solid #2f3b55;
+  width: 130px;
+  padding: 6px 0;
+  border-radius: 10px;
+  /* margin-top: 10px; */
+  margin-bottom: 10px;
+  text-align: center;
+  color: #2f3b55;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.predDataBox {
+  /* text-align: end; */
+  /* background-color: red; */
+  padding: 6px 0;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #2f3b55;
+  font-weight: 600;
+  font-size: 15px;
+  margin-left: 5vw;
+}
+
+.predictValue {
+}
+
+.no-flex {
+  display: block; /* 또는 inline, inline-block 등으로 기본 레이아웃으로 설정 */
 }
